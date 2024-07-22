@@ -75,17 +75,19 @@ class _MapScreenState extends State<MapScreen> {
         onTap: (mapObject, point) {
 
         },
-        text: PlacemarkText(text: user.name, style: PlacemarkTextStyle(color: Colors.black, offsetFromIcon: true)),
-        mapId: MapObjectId(user.id),
+        text: PlacemarkText(text: user.username, style: PlacemarkTextStyle(color: Colors.black, offsetFromIcon: true,placement: TextStylePlacement.bottom)),
+        mapId: MapObjectId(user.userId),
+
         icon: PlacemarkIcon.single(
+
           PlacemarkIconStyle(
-            scale: 0.8,
+
             image: icon,
           ),
         ),
         point: Point(
-          latitude: user.userLocation.lat,
-          longitude: user.userLocation.lon,
+          latitude: user.lat,
+          longitude: user.lon,
         ),
       ));
     }
@@ -132,26 +134,27 @@ class _MapScreenState extends State<MapScreen> {
                       return GestureDetector(
                         onTap: () async {
                           await _moveToCurrentLocation(
-                            state.users[i].userLocation.lat,
-                            state.users[i].userLocation.lon,
+                            state.users[i].lat,
+                            state.users[i].lon,
                           );
                           final icon = await _getMarkerIcon(state.users[i].imageUrl);
                           setState(() {
                             mapObjects.clear();
                             mapObjects.add(PlacemarkMapObject(
                               onTap: (mapObject, point) {
-                                print('Tapped on ${state.users[i].name}');
+                                print('Tapped on ${state.users[i].username}');
                               },
-                              mapId: MapObjectId(state.users[i].id),
+                              text: PlacemarkText(text: state.users[i].username, style: PlacemarkTextStyle(color: Colors.black,placement: TextStylePlacement.bottom)),
+                              mapId: MapObjectId(state.users[i].userId),
                               icon: PlacemarkIcon.single(
                                 PlacemarkIconStyle(
-                                  scale: 0.8,
+                                  scale: 1,
                                   image: icon,
                                 ),
                               ),
                               point: Point(
-                                latitude: state.users[i].userLocation.lat,
-                                longitude: state.users[i].userLocation.lon,
+                                latitude: state.users[i].lat,
+                                longitude: state.users[i].lon,
                               ),
                             ));
                           });
@@ -176,7 +179,7 @@ class _MapScreenState extends State<MapScreen> {
                                 ),
                               ),
                               Text(
-                                state.users[i].name,
+                                state.users[i].username,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],

@@ -2,12 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yandex_map/data/src/local.dart';
-import 'package:yandex_map/presantation/bloc/open_camera/open_camera_bloc.dart';
-import 'package:yandex_map/presantation/pages/map/map_screen.dart';
-import 'package:yandex_map/presantation/pages/open_camera/open_camera_page.dart';
+import 'package:yandex_map/presantation/pages/home/home.dart';
+import 'package:yandex_map/presantation/pages/login/login.dart';
 
-import '../../bloc/map_bloc/map_bloc.dart';
+import '../../../data/src/local.dart';
+import '../../bloc/home/home_bloc.dart';
+import '../../bloc/login/login_bloc.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -23,21 +23,43 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void _navigateToNextPage() {
     Timer(Duration(seconds: 3), () {
-      if (SharedPrefsManager().isUser()) {
+      if(SharedPrefsManager.getUserData().username == "") {
+        print(SharedPrefsManager().getUser().isNotEmpty);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (_) =>
+                    BlocProvider(
+                      create: (context) => HomeBloc()..add(LoadContactsEvent()),
+                      child: Home(),
+                    )));
+      } else
+       {
+         print("${SharedPrefsManager.getUserData().username} data is empty");
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (_) => BlocProvider(
+                    create: (context) => LoginBloc(),
+                    child: Login(),
+                  )));
+      }
+      /*if (SharedPrefsManager().isUser()) {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (context) => BlocProvider(
-            create: (context) => MapBloc()..add(LoadMapEvent()),
-            child: MapScreen(),
+            create: (context) => RegisterBloc(),
+            child: Register(),
           ),
         ));
       } else {
         Navigator.of(context).pushReplacement(MaterialPageRoute(
           builder: (c) => BlocProvider(
-            create: (context) => OpenCameraBloc(),
-            child: OpenCameraPage(),
+            create: (context) => RegisterBloc(),
+            child: Register(),
           ),
         ));
-      }
+      }*/
     });
   }
 
